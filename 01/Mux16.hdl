@@ -15,44 +15,10 @@ CHIP Mux16 {
 
     PARTS:
     // Put your code here:
-    And16(
-        a[0]=sel,
-        a[1]=sel,
-        a[2]=sel,
-        a[3]=sel,
-        a[4]=sel,
-        a[5]=sel,
-        a[6]=sel,
-        a[7]=sel,
-        a[8]=sel,
-        a[9]=sel,
-        a[10]=sel,
-        a[11]=sel,
-        a[12]=sel,
-        a[13]=sel,
-        a[14]=sel,
-        a[15]=sel,
-        b=b,
-        out=bwhensel);
+    Split1to16(in=sel, out=sel16);
+    And16(a=sel16, b=b, out=bwhensel);
     Not(in=sel, out=notsel);
-    And16(
-        a[0]=notsel,
-        a[1]=notsel,
-        a[2]=notsel,
-        a[3]=notsel,
-        a[4]=notsel,
-        a[5]=notsel,
-        a[6]=notsel,
-        a[7]=notsel,
-        a[8]=notsel,
-        a[9]=notsel,
-        a[10]=notsel,
-        a[11]=notsel,
-        a[12]=notsel,
-        a[13]=notsel,
-        a[14]=notsel,
-        a[15]=notsel,
-        b=a,
-        out=awhennotsel);
+    Split1to16(in=notsel, out=notsel16);
+    And16(a=notsel16, b=a, out=awhennotsel);
     Or16(a=bwhensel, b=awhennotsel, out=out);
 }
