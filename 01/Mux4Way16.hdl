@@ -17,13 +17,12 @@ CHIP Mux4Way16 {
 
     PARTS:
     // Put your code here:
-    And(a=sel[0], b=sel[1], out=seld);
     Not(in=sel[0], out=notsel0);
     Not(in=sel[1], out=notsel1);
-    And(a=notsel0, b=notsel1, out=sela);
-    Xor(a=sel[0], b=sel[1], out=selborc);
-    And(a=selborc, b=sel[0], out=selb);
-    And(a=selborc, b=sel[1], out=selc);
+    And(a=notsel1, b=notsel0, out=sela);
+    And(a=notsel1, b=sel[0], out=selb);
+    And(a=sel[1], b=notsel0, out=selc);
+    And(a=sel[1], b=sel[0], out=seld);
     Split1to16(in=sela, out=sela16);
     Split1to16(in=selb, out=selb16);
     Split1to16(in=selc, out=selc16);
