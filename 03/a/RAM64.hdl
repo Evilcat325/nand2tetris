@@ -16,7 +16,7 @@ CHIP RAM64 {
 
     PARTS:
     // Put your code here:
-        DMux8Way(
+    DMux8Way(
         a=load0,
         b=load1,
         c=load2,
