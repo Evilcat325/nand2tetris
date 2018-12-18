@@ -1,2 +1,4 @@
 ._*
 *.out
+project*.zip
+.DS_Store
