@@ -7,7 +7,7 @@
  * The ALU (Arithmetic Logic Unit).
  * Computes one of the following functions:
  * x+y, x-y, y-x, 0, 1, -1, x, y, -x, -y, !x, !y,
- * x+1, y+1, x-1, y-1, x&y, x|y on two 16-bit inputs, 
+ * x+1, y+1, x-1, y-1, x&y, x|y on two 16-bit inputs,
  * according to 6 input bits denoted zx,nx,zy,ny,f,no.
  * In addition, the ALU computes two 1-bit outputs:
  * if the ALU output == 0, zr is set to 1; otherwise zr is set to 0;
@@ -27,8 +27,8 @@
 // if (out < 0) set ng = 1
 
 CHIP ALU {
-    IN  
-        x[16], y[16],  // 16-bit inputs        
+    IN
+        x[16], y[16],  // 16-bit inputs
         zx, // zero the x input?
         nx, // negate the x input?
         zy, // zero the y input?
@@ -36,11 +36,57 @@ CHIP ALU {
         f,  // compute out = x + y (if 1) or x & y (if 0)
         no; // negate the out output?
 
-    OUT 
+    OUT
         out[16], // 16-bit output
         zr, // 1 if (out == 0), 0 otherwise
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
    // Put you code here:
+   Mux16(a=x, b=false, sel=zx, out=x1);
+   Not16(in=x1, out=notx1);
+   Mux16(a=x1, b=notx1, sel=nx, out=x2);
+   Mux16(a=y, b=false, sel=zy, out=y1);
+   Not16(in=y1, out=noty1);
+   Mux16(a=y1, b=noty1, sel=ny, out=y2);
+   Add16(a=x2, b=y2, out=xpy);
+   And16(a=x2, b=y2, out=xny);
+   Mux16(a=xny, b=xpy, sel=f, out=tmp);
+   Not16(in=tmp, out=nottmp);
+   Mux16(a=tmp, b=nottmp, sel=no,
+    out[0]=out0,
+    out[1]=out1,
+    out[2]=out2,
+    out[3]=out3,
+    out[4]=out4,
+    out[5]=out5,
+    out[6]=out6,
+    out[7]=out7,
+    out[8]=out8,
+    out[9]=out9,
+    out[10]=out10,
+    out[11]=out11,
+    out[12]=out12,
+    out[13]=out13,
+    out[14]=out14,
+    out[15]=out15
+   );
+   Mux16(a=tmp, b=nottmp, sel=no, out=out);
+   And(a=out15, b=true, out=ng);
+   Or(a=out0, b=out1, out=tmp1);
+   Or(a=tmp1, b=out2, out=tmp2);
+   Or(a=tmp2, b=out3, out=tmp3);
+   Or(a=tmp3, b=out4, out=tmp4);
+   Or(a=tmp4, b=out5, out=tmp5);
+   Or(a=tmp5, b=out6, out=tmp6);
+   Or(a=tmp6, b=out7, out=tmp7);
+   Or(a=tmp7, b=out8, out=tmp8);
+   Or(a=tmp8, b=out9, out=tmp9);
+   Or(a=tmp9, b=out10, out=tmp10);
+   Or(a=tmp10, b=out11, out=tmp11);
+   Or(a=tmp11, b=out12, out=tmp12);
+   Or(a=tmp12, b=out13, out=tmp13);
+   Or(a=tmp13, b=out14, out=tmp14);
+   Or(a=tmp14, b=out15, out=notzr);
+   Not(in=notzr, out=zr);
 }
