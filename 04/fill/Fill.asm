@@ -13,34 +13,10 @@
 
 // Put your code here.
 //init screen_size
+@8191
+D=A
 @screen_size
-D=1
-M=D+1	//screen_size = 2
-D=M
-M=M+D	//screen_size = 4
-D=M
-M=M+D	//screen_size = 8
-D=M
-M=M+D	//screen_size = 16
-D=M
-M=M+D	//screen_size = 32
-D=M
-M=M+D	//screen_size = 64
-D=M
-M=M+D	//screen_size = 128
-D=M
-M=M+D	//screen_size = 256
-D=M
-M=M+D	//screen_size = 512
-D=M
-M=M+D	//screen_size = 1024
-D=M
-M=M+D	//screen_size = 2048
-D=M
-M=M+D	//screen_size = 4096
-D=M
-M=M+D	//screen_size = 8192
-M=M-1	//screen_size = 8191
+M=D
 
 //init stat to 0
 @last_state

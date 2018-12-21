@@ -2,3 +2,4 @@
 *.out
 project*.zip
 .DS_Store
+*.hack
