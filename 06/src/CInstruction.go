@@ -28,7 +28,7 @@ var destMap = map[string]string{
 	"NULL": "000",
 	"M":    "001",
 	"D":    "010",
-	"MD":   "010",
+	"MD":   "011",
 	"A":    "100",
 	"AM":   "101",
 	"AD":   "110",
