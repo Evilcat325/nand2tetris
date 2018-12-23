@@ -7,7 +7,7 @@ import (
 
 func arithmeticTranslator(command CommandType, instructions []string, jumpCounter *int) string {
 	var result string
-	oneVar := "//" + instructions[0] + "\n" +
+	oneVar :=
 		`@SP
 		A=M-1
 		`
