@@ -1,5 +1,11 @@
 package main
 
-func brachingTranslator(command CommandType, instructions []string, jumpCounter *int) string {
-	return ""
+import "fmt"
+
+func brachingTranslator(command CommandType, instructions []string) string {
+	result := ""
+	if command == Label {
+		result = fmt.Sprintf("(LABEL_%s)", instructions[1])
+	}
+	return result
 }

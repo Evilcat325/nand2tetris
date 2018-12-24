@@ -32,9 +32,9 @@ func main() {
 			if Add <= command && command <= Not {
 				fmt.Fprint(writer, arithmeticTranslator(command, instructions, &jumpCounter))
 			} else if Pop <= command && command <= Push {
-				fmt.Fprint(writer, memoryAccessTranslator(command, instructions, &jumpCounter))
+				fmt.Fprint(writer, memoryAccessTranslator(command, instructions))
 			} else if Label <= command && command <= Goto {
-				fmt.Fprint(writer, brachingTranslator(command, instructions, &jumpCounter))
+				fmt.Fprint(writer, brachingTranslator(command, instructions))
 			}
 		}
 		writer.Flush()
