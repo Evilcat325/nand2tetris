@@ -33,6 +33,8 @@ func main() {
 				fmt.Fprint(writer, arithmeticTranslator(command, instructions, &jumpCounter))
 			} else if Pop <= command && command <= Push {
 				fmt.Fprint(writer, memoryAccessTranslator(command, instructions, &jumpCounter))
+			} else if Label <= command && command <= Goto {
+				fmt.Fprint(writer, brachingTranslator(command, instructions, &jumpCounter))
 			}
 		}
 		writer.Flush()
