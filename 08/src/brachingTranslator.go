@@ -1,11 +1,25 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
-func brachingTranslator(command CommandType, instructions []string) string {
+func brachingTranslator(command CommandType, instructions []string, jumpCounter *int) string {
 	result := ""
 	if command == Label {
-		result = fmt.Sprintf("(LABEL_%s)", instructions[1])
+		result = fmt.Sprintf("(LABEL_%s)\n", instructions[1])
+	} else if command == Goto {
+		result = fmt.Sprintf("@LABEL_%s\n0;JMP\n", instructions[1])
+	} else {
+		result =
+			`@SP
+			M=M-1
+			A=M
+			D=M
+			@LABEL_` + instructions[1] + `
+			D;JNE
+			`
 	}
-	return result
+	return strings.Replace(result, "\t", "", -1)
 }
