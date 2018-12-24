@@ -48,6 +48,9 @@ func getCommandType(scanner *bufio.Scanner) (CommandType, []string) {
 	line := strings.TrimSpace(scanner.Text())
 	firstPart := strings.Split(line, "//")[0]
 	valueblePart := strings.Split(firstPart, " ")
+	for i, str := range valueblePart {
+		valueblePart[i] = strings.TrimSpace(str)
+	}
 	if len(valueblePart) <= 0 {
 		return Comment, valueblePart
 	} else if valueblePart[0] == "add" {
