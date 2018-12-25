@@ -35,6 +35,8 @@ func main() {
 				fmt.Fprint(writer, memoryAccessTranslator(command, instructions))
 			} else if Label <= command && command <= Goto {
 				fmt.Fprint(writer, brachingTranslator(command, instructions, &jumpCounter))
+			} else if Function <= command && command <= Return {
+				fmt.Fprint(writer, functionTranslator(command, instructions))
 			}
 		}
 		writer.Flush()
