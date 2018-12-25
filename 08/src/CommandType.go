@@ -41,6 +41,12 @@ const (
 	IfGoto
 	//Goto got to the label unconditional
 	Goto
+	//Function declare a function
+	Function
+	//Call Jump to other function
+	Call
+	//Return signal return to the caller
+	Return
 )
 
 //getCommandType return the CommandType of the next line from scanner
@@ -81,6 +87,12 @@ func getCommandType(scanner *bufio.Scanner) (CommandType, []string) {
 		return IfGoto, valueblePart
 	} else if valueblePart[0] == "goto" {
 		return Goto, valueblePart
+	} else if valueblePart[0] == "function" {
+		return Function, valueblePart
+	} else if valueblePart[0] == "call" {
+		return Call, valueblePart
+	} else if valueblePart[0] == "return" {
+		return Return, valueblePart
 	}
 	return Unknown, valueblePart
 }
