@@ -14,6 +14,7 @@ type TranslatorState struct {
 	jumpCounter   int
 	scanner       *bufio.Scanner
 	writer        *bufio.Writer
+	staticVarMap  map[string]int
 }
 
 // CommandType map line string to hack language type
