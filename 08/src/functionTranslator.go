@@ -12,15 +12,14 @@ var functionName string
 func functionTranslator(command CommandType, instructions []string, state *TranslatorState) string {
 	result := ""
 	if command == Function {
-		// Set current functionName, init return count
+		// Set current functionName (includes fileName)
 		state.functionName = instructions[1]
+		// Init return count
 		state.returnCounter = 0
-		// Format label
-		functionLabel := fmt.Sprintf("%s.%s", state.fileName, state.functionName)
 		nArgs, err := strconv.Atoi(instructions[2])
 		check(err)
 		// Set function label
-		result += "(" + functionLabel + ")\n"
+		result += "(" + state.functionName + ")\n"
 		// Set local segment
 		for i := 0; i < nArgs; i++ {
 			// initialize to 0
@@ -33,7 +32,7 @@ func functionTranslator(command CommandType, instructions []string, state *Trans
 		}
 	} else if command == Call {
 		callee := instructions[1]
-		returnLabel := fmt.Sprintf("%s.%s$ret.%d", state.fileName, state.functionName, state.returnCounter)
+		returnLabel := fmt.Sprintf("%s$ret.%d", state.functionName, state.returnCounter)
 		state.returnCounter++
 		nArgs, err := strconv.Atoi(instructions[2])
 		check(err)
