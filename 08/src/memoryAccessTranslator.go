@@ -13,7 +13,6 @@ var segmentMap = map[string]int{
 	"that":     4,
 	"pointer":  3,
 	"temp":     5,
-	"static":   16,
 }
 
 func memoryAccessTranslator(command CommandType, instructions []string, state *TranslatorState) string {
@@ -26,8 +25,13 @@ func memoryAccessTranslator(command CommandType, instructions []string, state *T
 		if segment == "constant" {
 			result += fmt.Sprintf("@%d\nD=A\n", index)
 		} else if segment == "static" {
-			result += fmt.Sprintf("@%s.%d\nD=A", state.fileName, state.staticCounter)
-			state.staticCounter++
+			if val, ok := state.staticVarMap[state.fileName+instructions[2]]; ok {
+				result += fmt.Sprintf("@%s.%d\nD=M\n", state.fileName, val)
+			} else {
+				result += fmt.Sprintf("@%s.%d\nD=M\n", state.fileName, state.staticCounter)
+				state.staticVarMap[state.fileName+instructions[2]] = state.staticCounter
+				state.staticCounter++
+			}
 		} else {
 			result += "@" + strconv.Itoa(segmentMap[segment]) + "\n"
 			if segment == "temp" || segment == "pointer" {
@@ -48,16 +52,28 @@ func memoryAccessTranslator(command CommandType, instructions []string, state *T
 			M=M+1
 			`
 	} else {
-		result += "@" + strconv.Itoa(segmentMap[segment]) + "\n"
-		if segment == "temp" || segment == "pointer" || segment == "static" {
-			result += "D=A\n"
+		if segment == "static" {
+			if val, ok := state.staticVarMap[state.fileName+instructions[2]]; ok {
+				result += fmt.Sprintf("@%s.%d\nD=A\n", state.fileName, val)
+			} else {
+				result += fmt.Sprintf("@%s.%d\nD=A\n", state.fileName, state.staticCounter)
+				state.staticVarMap[state.fileName+instructions[2]] = state.staticCounter
+				state.staticCounter++
+			}
 		} else {
-			result += "D=M\n"
+			result += "@" + strconv.Itoa(segmentMap[segment]) + "\n"
+			if segment == "temp" || segment == "pointer" {
+				result += "D=A\n"
+			} else {
+				result += "D=M\n"
+			}
+			result +=
+				`@` + strconv.Itoa(index) + `
+				D=D+A
+				`
 		}
 		result +=
-			`@` + strconv.Itoa(index) + `
-			D=D+A
-			@R15
+			`@R15
 			M=D
 			@SP
 			AM=M-1
