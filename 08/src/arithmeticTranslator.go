@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func arithmeticTranslator(command CommandType, instructions []string, state *TransaltorState) string {
+func arithmeticTranslator(command CommandType, instructions []string, state *TranslatorState) string {
 	var result string
 	oneVar :=
 		`@SP
