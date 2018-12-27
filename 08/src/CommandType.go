@@ -5,6 +5,17 @@ import (
 	"strings"
 )
 
+// TranslatorState keeps info for label generation
+type TranslatorState struct {
+	fileName      string
+	functionName  string
+	staticCounter int
+	returnCounter int
+	jumpCounter   int
+	scanner       *bufio.Scanner
+	writer        *bufio.Writer
+}
+
 // CommandType map line string to hack language type
 type CommandType int
 

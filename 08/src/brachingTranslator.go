@@ -5,12 +5,12 @@ import (
 	"strings"
 )
 
-func brachingTranslator(command CommandType, instructions []string, fileName string, functionName string) string {
+func brachingTranslator(command CommandType, instructions []string, state *TransaltorState) string {
 	result := ""
 	if command == Label {
-		result = fmt.Sprintf("(%s.%s$%s)\n", fileName, functionName, instructions[1])
+		result = fmt.Sprintf("(%s.%s$%s)\n", state.fileName, state.functionName, instructions[1])
 	} else if command == Goto {
-		result = fmt.Sprintf("@%s.%s$%s\n0;JMP\n", fileName, functionName, instructions[1])
+		result = fmt.Sprintf("@%s.%s$%s\n0;JMP\n", state.fileName, state.functionName, instructions[1])
 	} else {
 		result =
 			`@SP

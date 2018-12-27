@@ -6,12 +6,17 @@ import (
 	"strings"
 )
 
-func functionTranslator(command CommandType, instructions []string, filename string, functionName *string, runningI *int) string {
+var returnPoint int
+var functionName string
+
+func functionTranslator(command CommandType, instructions []string, state *TransaltorState) string {
 	result := ""
 	if command == Function {
-		// Set current functionName
-		*functionName = instructions[1]
-		functionLabel := fmt.Sprintf("%s.%s", filename, *functionName)
+		// Set current functionName, init return count
+		state.functionName = instructions[1]
+		state.returnCounter = 0
+		// Format label
+		functionLabel := fmt.Sprintf("%s.%s", state.fileName, state.functionName)
 		nArgs, err := strconv.Atoi(instructions[2])
 		check(err)
 		// Set function label
@@ -28,8 +33,8 @@ func functionTranslator(command CommandType, instructions []string, filename str
 		}
 	} else if command == Call {
 		callee := instructions[1]
-		returnLabel := fmt.Sprintf("%s.%s$ret.%d", filename, *functionName, *runningI)
-		*runningI++
+		returnLabel := fmt.Sprintf("%s.%s$ret.%d", state.fileName, state.functionName, state.returnCounter)
+		state.returnCounter++
 		nArgs, err := strconv.Atoi(instructions[2])
 		check(err)
 		// save SP to R13

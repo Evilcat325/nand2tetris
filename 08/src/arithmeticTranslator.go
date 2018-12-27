@@ -1,11 +1,11 @@
 package main
 
 import (
-	"strconv"
+	"fmt"
 	"strings"
 )
 
-func arithmeticTranslator(command CommandType, instructions []string, jumpCounter *int) string {
+func arithmeticTranslator(command CommandType, instructions []string, state *TransaltorState) string {
 	var result string
 	oneVar :=
 		`@SP
@@ -35,17 +35,18 @@ func arithmeticTranslator(command CommandType, instructions []string, jumpCounte
 			result += "M=M|D\n"
 		} else if command == Eq || command == Gt || command == Lt {
 			cmp := strings.ToUpper(instructions[0])
+			jumpLabel := fmt.Sprintf("D_%s_M_%d", cmp, state.jumpCounter)
+			state.jumpCounter++
 			result +=
 				`D=M-D
 				M=-1
-				@D_` + cmp + `_M_` + strconv.Itoa(*jumpCounter) + `
+				@` + jumpLabel + `
 				D;J` + cmp + `
 				@SP
 				A=M-1
 				M=0
-				(D_` + cmp + `_M_` + strconv.Itoa(*jumpCounter) + `)
+				(` + jumpLabel + `)
 				`
-			*jumpCounter++
 		}
 	}
 	return strings.Replace(result, "\t", "", -1)
