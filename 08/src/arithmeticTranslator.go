@@ -7,24 +7,23 @@ import (
 
 func arithmeticTranslator(command CommandType, instructions []string, state *TranslatorState) string {
 	var result string
-	oneVar :=
-		`@SP
-		A=M-1
-		`
-	twoVar := oneVar +
-		`D=M
-		@SP
-		AM=M-1
-		`
 	if command == Neg || command == Not {
-		result = oneVar
+		result =
+			`@SP
+			A=M-1
+			`
 		if command == Neg {
 			result += "M=-M\n"
 		} else if command == Not {
 			result += "M=!M\n"
 		}
 	} else {
-		result = twoVar
+		result =
+			`@SP
+			AM=M-1
+			D=M
+			A=A-1
+			`
 		if command == Add {
 			result += "M=M+D\n"
 		} else if command == Sub {
