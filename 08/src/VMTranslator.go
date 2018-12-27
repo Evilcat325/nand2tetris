@@ -36,15 +36,29 @@ func main() {
 		pathInfo, err := os.Stat(path)
 		check(err)
 		state := TranslatorState{
-			jumpCounter: 0,
+			jumpCounter:   0,
+			staticCounter: 0, // Counter increment per asm file rather than per vm file
+			staticVarMap:  map[string]int{},
 		}
 		switch mode := pathInfo.Mode(); {
 		case mode.IsDir():
 			programName := filepath.Base(path)
 			asmFile, err := os.Create(path + "/" + programName + ".asm")
 			check(err)
+			defer asmFile.Close()
 			state.writer = bufio.NewWriter(asmFile)
 			addBootingInstruction(state.writer)
+			filepath.Walk(path, func(p string, f os.FileInfo, _ error) error {
+				if filepath.Ext(p) == ".vm" {
+					file, err := os.Open(p)
+					check(err)
+					defer file.Close()
+					state.fileName = strings.TrimSuffix(filepath.Base(p), filepath.Ext(p))
+					state.scanner = bufio.NewScanner(file)
+					vmToAsm(&state)
+				}
+				return nil
+			})
 
 		case mode.IsRegular():
 			file, err := os.Open(path)
