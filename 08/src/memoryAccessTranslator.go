@@ -16,7 +16,7 @@ var segmentMap = map[string]int{
 	"static":   16,
 }
 
-func memoryAccessTranslator(command CommandType, instructions []string, fileName string, staticCounter *int) string {
+func memoryAccessTranslator(command CommandType, instructions []string, state *TransaltorState) string {
 	segment := instructions[1]
 	index, err := strconv.Atoi(instructions[2])
 	check(err)
@@ -26,8 +26,8 @@ func memoryAccessTranslator(command CommandType, instructions []string, fileName
 		if segment == "constant" {
 			result += fmt.Sprintf("@%d\nD=A\n", index)
 		} else if segment == "static" {
-			result += fmt.Sprintf("@%s.%d\nD=A", fileName, *staticCounter)
-			*staticCounter++
+			result += fmt.Sprintf("@%s.%d\nD=A", state.fileName, state.staticCounter)
+			state.staticCounter++
 		} else {
 			result += "@" + strconv.Itoa(segmentMap[segment]) + "\n"
 			if segment == "temp" || segment == "pointer" {
@@ -60,9 +60,7 @@ func memoryAccessTranslator(command CommandType, instructions []string, fileName
 			@R15
 			M=D
 			@SP
-			M=M-1
-			A=M
-			D=M
+			ADM=M-1
 			@R15
 			A=M
 			M=D
