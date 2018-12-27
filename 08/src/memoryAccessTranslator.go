@@ -60,7 +60,8 @@ func memoryAccessTranslator(command CommandType, instructions []string, state *T
 			@R15
 			M=D
 			@SP
-			ADM=M-1
+			AM=M-1
+			D=M
 			@R15
 			A=M
 			M=D

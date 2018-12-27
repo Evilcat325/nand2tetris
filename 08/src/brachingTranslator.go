@@ -8,9 +8,18 @@ import (
 func brachingTranslator(command CommandType, instructions []string, state *TranslatorState) string {
 	result := ""
 	if command == Label {
-		result = fmt.Sprintf("(%s$%s)\n", state.functionName, instructions[1])
+		if state.functionName != "" {
+			result = fmt.Sprintf("(%s$%s)\n", state.functionName, instructions[1])
+		} else {
+			result = fmt.Sprintf("(%s)\n", instructions[1])
+		}
 	} else if command == Goto {
-		result = fmt.Sprintf("@%s$%s\n0;JMP\n", state.functionName, instructions[1])
+		if state.functionName != "" {
+			result = fmt.Sprintf("@%s$%s", state.functionName, instructions[1])
+		} else {
+			result = fmt.Sprintf("@%s", instructions[1])
+		}
+		result += "\n0; JMP\n"
 	} else if command == IfGoto {
 		result =
 			`@SP
