@@ -15,16 +15,15 @@ func functionTranslator(command CommandType, instructions []string, filename str
 		nArgs, err := strconv.Atoi(instructions[2])
 		check(err)
 		// Set function label
-		result += "(" + *functionName + ")\n"
+		result += "(" + functionLabel + ")\n"
 		// Set local segment
 		for i := 0; i < nArgs; i++ {
 			// initialize to 0
 			result +=
 				`@SP
-				A=M
-				M=0
-				@SP
 				M=M+1
+				A=M-1
+				M=0
 				`
 		}
 	} else if command == Call {
