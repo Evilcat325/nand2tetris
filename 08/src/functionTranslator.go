@@ -1,18 +1,21 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
 
-func functionTranslator(command CommandType, instructions []string) string {
+func functionTranslator(command CommandType, instructions []string, filename string, functionName *string, runningI *int) string {
 	result := ""
 	if command == Function {
-		functionName := instructions[1]
+		// Set current functionName
+		*functionName = instructions[1]
+		functionLabel := fmt.Sprintf("%s.%s", filename, *functionName)
 		nArgs, err := strconv.Atoi(instructions[2])
 		check(err)
 		// Set function label
-		result += "(" + functionName + ")\n"
+		result += "(" + *functionName + ")\n"
 		// Set local segment
 		for i := 0; i < nArgs; i++ {
 			// initialize to 0
@@ -25,7 +28,9 @@ func functionTranslator(command CommandType, instructions []string) string {
 				`
 		}
 	} else if command == Call {
-		functionName := instructions[1]
+		callee := instructions[1]
+		returnLabel := fmt.Sprintf("%s.%s$ret.%d", filename, *functionName, *runningI)
+		*runningI++
 		nArgs, err := strconv.Atoi(instructions[2])
 		check(err)
 		// save SP to R13
@@ -37,7 +42,7 @@ func functionTranslator(command CommandType, instructions []string) string {
 			`
 		// Save return address
 		result +=
-			`@RETURN` + functionName + `
+			`@` + returnLabel + `
 			D=A
 			@SP
 			A=M
@@ -105,9 +110,9 @@ func functionTranslator(command CommandType, instructions []string) string {
 			`
 		// Jump to excute function
 		result +=
-			`@` + functionName + `
+			`@` + callee + `
 			0; JMP
-			(` + "RETURN" + functionName + `)
+			(` + returnLabel + `)
 			`
 	} else if command == Return {
 		// Copy return value to argument 0

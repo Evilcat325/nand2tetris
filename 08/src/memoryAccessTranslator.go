@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -15,7 +16,7 @@ var segmentMap = map[string]int{
 	"static":   16,
 }
 
-func memoryAccessTranslator(command CommandType, instructions []string) string {
+func memoryAccessTranslator(command CommandType, instructions []string, fileName string, staticCounter *int) string {
 	segment := instructions[1]
 	index, err := strconv.Atoi(instructions[2])
 	check(err)
@@ -23,11 +24,13 @@ func memoryAccessTranslator(command CommandType, instructions []string) string {
 	if command == Push {
 		//load value to D
 		if segment == "constant" {
-			result += "@" + strconv.Itoa(index) + "\n"
-			result += "D=A\n"
+			result += fmt.Sprintf("@%d\nD=A\n", index)
+		} else if segment == "static" {
+			result += fmt.Sprintf("@%s.%d\nD=A", fileName, *staticCounter)
+			*staticCounter++
 		} else {
 			result += "@" + strconv.Itoa(segmentMap[segment]) + "\n"
-			if segment == "temp" || segment == "pointer" || segment == "static" {
+			if segment == "temp" || segment == "pointer" {
 				result += "D=A\n"
 			} else {
 				result += "D=M\n"
