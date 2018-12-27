@@ -9,7 +9,7 @@ import (
 var returnPoint int
 var functionName string
 
-func functionTranslator(command CommandType, instructions []string, state *TransaltorState) string {
+func functionTranslator(command CommandType, instructions []string, state *TranslatorState) string {
 	result := ""
 	if command == Function {
 		// Set current functionName, init return count

@@ -16,7 +16,7 @@ var segmentMap = map[string]int{
 	"static":   16,
 }
 
-func memoryAccessTranslator(command CommandType, instructions []string, state *TransaltorState) string {
+func memoryAccessTranslator(command CommandType, instructions []string, state *TranslatorState) string {
 	segment := instructions[1]
 	index, err := strconv.Atoi(instructions[2])
 	check(err)

@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func brachingTranslator(command CommandType, instructions []string, state *TransaltorState) string {
+func brachingTranslator(command CommandType, instructions []string, state *TranslatorState) string {
 	result := ""
 	if command == Label {
 		result = fmt.Sprintf("(%s.%s$%s)\n", state.fileName, state.functionName, instructions[1])

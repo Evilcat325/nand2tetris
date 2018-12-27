@@ -18,13 +18,13 @@ func vmToAsm(state *TranslatorState) {
 	for state.scanner.Scan() {
 		command, instructions := getCommandType(state.scanner)
 		if Add <= command && command <= Not {
-			fmt.Fprint(state.writer, arithmeticTranslator(command, instructions, &state))
+			fmt.Fprint(state.writer, arithmeticTranslator(command, instructions, state))
 		} else if Pop <= command && command <= Push {
-			fmt.Fprint(state.writer, memoryAccessTranslator(command, instructions, &state))
+			fmt.Fprint(state.writer, memoryAccessTranslator(command, instructions, state))
 		} else if Label <= command && command <= Goto {
-			fmt.Fprint(state.writer, brachingTranslator(command, instructions, &state))
+			fmt.Fprint(state.writer, brachingTranslator(command, instructions, state))
 		} else if Function <= command && command <= Return {
-			fmt.Fprint(state.writer, functionTranslator(command, instructions, &state))
+			fmt.Fprint(state.writer, functionTranslator(command, instructions, state))
 		}
 		state.writer.Flush()
 	}
