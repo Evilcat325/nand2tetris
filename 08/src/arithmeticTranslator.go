@@ -14,8 +14,7 @@ func arithmeticTranslator(command CommandType, instructions []string, jumpCounte
 	twoVar := oneVar +
 		`D=M
 		@SP
-		M=M-1
-		A=M-1
+		AM=M-1
 		`
 	if command == Neg || command == Not {
 		result = oneVar
