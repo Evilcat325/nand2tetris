@@ -21,13 +21,19 @@ func brachingTranslator(command CommandType, instructions []string, state *Trans
 		}
 		result += "\n0; JMP\n"
 	} else if command == IfGoto {
+		jumpLabel := ""
+		if state.functionName != "" {
+			jumpLabel = fmt.Sprintf("%s$%s", state.functionName, instructions[1])
+		} else {
+			jumpLabel = fmt.Sprintf("%s", instructions[1])
+		}
 		result =
 			`@SP
 			M=M-1
 			A=M
 			D=M
-			@` + state.functionName + instructions[1] + `
-			D;JNE
+			@` + jumpLabel + `
+			D; JNE
 			`
 	}
 	return strings.Replace(result, "\t", "", -1)
