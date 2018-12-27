@@ -40,7 +40,7 @@ func arithmeticTranslator(command CommandType, instructions []string, state *Tra
 				`D=M-D
 				M=-1
 				@` + jumpLabel + `
-				D;J` + cmp + `
+				D; J` + cmp + `
 				@SP
 				A=M-1
 				M=0
