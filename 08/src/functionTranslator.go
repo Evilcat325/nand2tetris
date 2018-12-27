@@ -118,13 +118,12 @@ func functionTranslator(command CommandType, instructions []string, state *Trans
 			(` + returnLabel + `)
 			`
 	} else if command == Return {
-		// Copy return value to argument 0
+		// Copy return value to R15 (when no argument, ARG collide with Return address )
 		result +=
 			`@SP
 			A=M-1
 			D=M
-			@ARG
-			A=M
+			@15
 			M=D
 			`
 		// Save ARG to R13
@@ -181,11 +180,27 @@ func functionTranslator(command CommandType, instructions []string, state *Trans
 			@SP
 			M=D
 			`
-		// Jump to return to caller
+		// Save return address to R13
 		result +=
 			`@R14
+			A=M-1
+			D=M
+			@R13
+			M=D
+			`
+		// Set return value/R15 to SP - 1
+		result +=
+			`@R15
+			D=M
+			@SP
+			A=M-1
+			M=D
+			`
+		// Jump to return/R15
+		result +=
+			`@R13
 			A=M
-			0;JMP
+			0; JMP
 			`
 	}
 	return strings.Replace(result, "\t", "", -1)
